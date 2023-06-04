@@ -85,7 +85,6 @@ public class GameController {
 
         int currentPlayerNumber = currentPlayer.getNumber();
 
-        // Assuming the numbers are from 1 to 4
         int nextPlayerNumber = ((currentPlayerNumber + 1) % 4) ;
         int nextToNextPlayerNumber = ((nextPlayerNumber + 1) % 4) ;
         int nextToNextToNextPlayerNumber = ((nextToNextPlayerNumber + 1) % 4) ;
@@ -123,7 +122,7 @@ public class GameController {
 
         model.addAttribute("player", currentGame.getCurrentPlayer().getName());
 
-        return "win"; // Assurez-vous d'avoir une vue "win".
+        return "win";
     }
 
 
