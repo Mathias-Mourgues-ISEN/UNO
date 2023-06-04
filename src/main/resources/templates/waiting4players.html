@@ -1,0 +1,46 @@
+<html th:replace="~{layout :: layout(~{::title}, ~{::content})}" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <title th:fragment="title">En Attente...</title>
+
+</head>
+<body>
+<div th:fragment="content">
+    <meta http-equiv="refresh" content="2">
+    <meta sec:authorize="isAuthenticated() == false" http-equiv="refresh" content="0; url=/login"/>
+    <h1>En attente de joueurs...</h1>
+    <!--    <h2>Partagez le lien suivant avec vos amis</h2>-->
+    <!--    <h4>Cliquez dessus pour le copier - A FAIRE EN JS</h4>-->
+    <label for="copyTarget"></label><input
+        type="text"
+        id="copyTarget"
+        class="form-control"
+        th:value="${lobbyId}"
+        disabled
+/>
+
+    <button class="btn btn-primary" id="copyButton">Copier</button>
+
+    <div class="col mb-4">
+        <div class="card" th:each="user: ${users}">
+            <div class="card-body">
+                <input
+                        type="text"
+                        class="form-control"
+                        th:value="${user.username}"
+                        disabled
+                />
+            </div>
+        </div>
+    </div>
+    <script>
+        document.getElementById('copyButton').addEventListener('click', function () {
+            const copyText = document.getElementById('copyTarget');
+            copyText.select();
+            copyText.setSelectionRange(0, 99999); // For mobile devices
+            navigator.clipboard.writeText(copyText.value);
+        });
+    </script>
+</div>
+</body>
+</html>

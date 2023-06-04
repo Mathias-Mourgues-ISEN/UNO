@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+<head>
+    <meta charset="UTF-8">
+<!--    <meta http-equiv="refresh" content="2">-->
+    <title>Jeu Uno</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        :root {
+            --card-width: 18vmin;
+            --card-aspect-ratio: 5 / 7;
+            --card-bg: rgba(255, 255, 255, 0.1);
+            --card-radius: 1vmin;
+            --card-transition: filter 200ms linear, transform 200ms linear;
+        }
+
+        .card-grid {
+            display: flex;
+            overflow-x: auto;
+            gap: 1rem;
+        }
+
+        .card {
+            width: var(--card-width);
+            aspect-ratio: var(--card-aspect-ratio);
+            background-color: var(--card-bg);
+            border-radius: var(--card-radius);
+            transition: var(--card-transition);
+        }
+
+        .card.blur {
+            filter: brightness(0.5) blur(10px);
+        }
+
+        .card:hover, .card.hover {
+            filter: none;
+            transform: scale(1.08) translateZ(0);
+        }
+
+        .card-grid::-webkit-scrollbar {
+            display: none;
+        }
+
+        .piocher {
+            border-radius: 0.7vmin;
+            aspect-ratio: 7/2;
+            width: var(--card-width);
+            background-color: rgb(0, 68, 255);
+            border: solid 3px rgb(130, 163, 255);
+            color: white;
+        }
+    </style>
+</head>
+<body class="bg-dark text-white d-flex flex-column align-items-center justify-content-between">
+<meta sec:authorize="isAuthenticated() == false" http-equiv="refresh" content="0; url=/login"/>
+<div class="text-center">
+    <h2 class="my-4">UNO</h2>
+</div>
+<div class="container my-4 text-center">
+    <h2>Joueur du Haut</h2>
+    <h3>Nombre de cartes : <span th:text="${game.players.get(playerTop - 1).hand.size()}"></span></h3>
+</div>
+
+<div class="container d-flex justify-content-around my-4">
+    <div class="text-left">
+        <h2>Joueur de gauche</h2>
+        <h3>Nombre de cartes : <span th:text="${game.players.get(playerLeft - 1).hand.size()}"></span></h3>
+    </div>
+    <div class="text-center">
+        <h2>Pioche</h2>
+        <img th:src="@{/cardImg/pioche.png}" alt="Pioche" width="100">
+    </div>
+    <div class="text-center">
+        <h2>Défausse</h2>
+        <img th:src="@{/cardImg/{link}.png(link=${game.getCurrentCard().link})}" width="100">
+    </div>
+    <div class="text-right">
+        <h2>Joueur de droite</h2>
+        <h3>Nombre de cartes : <span th:text="${game.players.get(playerRight - 1).hand.size()}"></span></h3>
+    </div>
+</div>
+
+<div class="container my-4">
+    <h2 class="text-center">Mon jeu</h2>
+    <div class="d-flex justify-content-center align-items-end">
+        <div class="card-grid" th:each="card: ${playerHand}">
+            <div class="card" th:id="${card.uuid}" th:data-player-id="${playerID}">
+                <img th:src="@{/cardImg/{link}.png(link=${card.link})}" alt="Image">
+            </div>
+        </div>
+        <a href="/game/draw" class="btn btn-primary">Piocher</a>
+    </div>
+</div>
+
+<span id="currentPlayerId" style="display: none;" th:text="${game.getCurrentPlayer().getUuid()}"></span>
+
+<script src="/webjars/sockjs-client/sockjs.min.js"></script>
+<script src="/webjars/stomp-websocket/stomp.min.js"></script>
+
+<script>
+    let gameId = extractGameIdFromUrl(window.location.href);
+
+    var socket = new SockJS('/uno-websocket');
+    var stompClient = Stomp.over(socket);
+    stompClient.connect({}, function (frame) {
+        console.log('Connected: ' + frame);
+        stompClient.subscribe('/topic/game/' + gameId, function (gameState) {
+            location.reload();
+        });
+    });
+
+    function extractGameIdFromUrl(url) {
+        const match = url.match(/\/game\/([^/]+)/);
+        if (match && match[1]) {
+            return match[1];
+        }
+        return null;
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        let cards = document.querySelectorAll('.card');
+
+        cards.forEach(card => {
+            card.addEventListener('mouseover', function () {
+                this.classList.remove('blur');
+                Array.from(cards).forEach(otherCard => {
+                    if (otherCard !== this) otherCard.classList.add('blur');
+                });
+            });
+
+            card.addEventListener('mouseout', function () {
+                Array.from(cards).forEach(otherCard => otherCard.classList.remove('blur'));
+            });
+
+            card.addEventListener('click', function () {
+                    let cardId = this.getAttribute('id'); // Get card ID.
+                    console.log("Card clicked:", cardId);
+
+
+
+
+                    // Get current player ID.
+                    let currentPlayerId = document.getElementById('currentPlayerId').textContent;
+
+                    // Get player ID of clicked card.
+                    let cardOwnerId = this.getAttribute('data-player-id');
+                    if (currentPlayerId === cardOwnerId) {
+                        fetch('/cards/' + gameId + '/' + cardId, {
+                            method: 'GET'
+                        })
+                            .then(response => {
+                                if (response.ok) {
+                                    return response.json();
+                                } else {
+                                    console.error('Erreur lors de la requête. Statut :', response.status);
+                                }
+                            })
+                            .then(data => {
+                                if (data.cardCanBePlayed) {
+                                    let cardImgSrc = this.querySelector('img').getAttribute('src');
+
+                                    let discardPile = document.querySelector('.container.d-flex .text-center:nth-child(3) img');
+
+                                    let cardRect = this.getBoundingClientRect();
+                                    let discardPileRect = discardPile.getBoundingClientRect();
+
+                                    let clonedCard = this.cloneNode(true);
+                                    clonedCard.style.position = "absolute";
+                                    clonedCard.style.top = cardRect.top + "px";
+                                    clonedCard.style.left = cardRect.left + "px";
+                                    document.body.appendChild(clonedCard);
+
+                                    let start = null;
+                                    let duration = 1000; // Animation duration in ms.
+
+                                    card.parentNode.removeChild(card);
+                                    Array.from(cards).forEach(otherCard => otherCard.classList.remove('blur'));
+
+                                    function animate(timestamp) {
+                                        if (!start) start = timestamp;
+                                        let progress = timestamp - start;
+                                        let t = Math.min(progress / duration, 1); // Normalize time to [0, 1] interval.
+                                        clonedCard.style.top = cardRect.top + (discardPileRect.top - cardRect.top) * t + "px";
+                                        clonedCard.style.left = cardRect.left + (discardPileRect.left - cardRect.left) * t + "px";
+                                        if (progress < duration) {
+                                            requestAnimationFrame(animate);
+                                        } else {
+                                            discardPile.setAttribute('src', cardImgSrc);
+                                            document.body.removeChild(clonedCard);
+                                        }
+                                    }
+
+                                    // requestAnimationFrame(animate);
+
+                                }
+                                if (data.hasWon) {
+                                    window.location.href = '/win';
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Erreur lors de la requête', error);
+                            });
+                    }
+                }
+            )
+            ;
+        });
+    });
+
+
+
+</script>
+<!-- Ajoutez les liens vers les fichiers JavaScript Bootstrap si nécessaire -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+
+</body>
+</html>

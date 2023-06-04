@@ -1,0 +1,53 @@
+<html th:replace="~{layout :: layout(~{::title}, ~{::content})}" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <title th:fragment="title">Page d'administration</title>
+</head>
+<body>
+<div th:fragment="content">
+    <meta sec:authorize="isAuthenticated() == false" http-equiv="refresh" content="0; url=/login"/>
+    <h1>User Administration</h1>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nom d'utilisateur</th>
+            <th>Pseudo</th>
+            <th>Activé</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="user : ${users}">
+            <td th:text="${user.uuid}"></td>
+            <td th:text="${user.username}"></td>
+            <td th:text="${user.pseudo}"></td>
+            <td th:text="${user.enabled}"></td>
+            <td>
+                <form th:if="${user.enabled}" th:action="@{/admin/block/{id}(id=${user.uuid})}" method="post">
+                    <button type="submit" class="btn btn-danger">Désactiver</button>
+                </form>
+                <form th:if="${!user.enabled}" th:action="@{/admin/unblock/{id}(id=${user.uuid})}" method="post">
+                    <button type="submit" class="btn btn-success">Activer</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <nav>
+        <ul class="pagination">
+            <li class="page-item" th:classappend="${users.first ? 'disabled' : ''}">
+                <a class="page-link" th:href="@{/admin(page=${users.number - 1})}">Previous</a>
+            </li>
+            <li class="page-item" th:each="i : ${#numbers.sequence(0, users.totalPages - 1)}"
+                th:classappend="${i == users.number ? 'active' : ''}">
+                <a class="page-link" th:href="@{/admin(page=${i})}" th:text="${i + 1}"></a>
+            </li>
+            <li class="page-item" th:classappend="${users.last ? 'disabled' : ''}">
+                <a class="page-link" th:href="@{/admin(page=${users.number + 1})}">Next</a>
+            </li>
+        </ul>
+    </nav>
+</div>
+</body>
+</html>

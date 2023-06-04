@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:fragment="layout (title, content)"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <!-- meta -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+
+    <!-- Remix Icon -->
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
+
+    <!-- page title, will be replaced by given fragment -->
+    <title th:replace="${title}">Application Title</title>
+</head>
+<body>
+
+<!-- navigation bar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#" th:href="@{/}">UNO</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" th:href="@{/lobby}">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" th:href="@{/admin}">Administration</a>
+                </li>
+                <!--                <li class="nav-item dropdown" sec:authorize="hasRole('ROLE_ADMIN')">-->
+                <!--                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">-->
+                <!--                        Administration-->
+                <!--                    </a>-->
+                <!--                    <ul class="dropdown-menu">-->
+                <!--                        <li><a class="dropdown-item" href="#" th:href="@{/admin/category}">Catégories</a></li>-->
+                <!--                        <li><a class="dropdown-item" href="#" th:href="@{/admin/product}">Produits</a></li>-->
+                <!--                        <li><hr class="dropdown-divider"></li>-->
+                <!--                        <li><a class="dropdown-item" href="#">Utilisateurs</a></li>-->
+                <!--                        <li><a class="dropdown-item" href="#">Commandes</a></li>-->
+                <!--                    </ul>-->
+                <!--                </li>-->
+            </ul>
+        </div>
+
+<!--        <div class="d-flex dropdown pe-5">-->
+<!--            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"-->
+<!--                    id="dropdownBasket" aria-expanded="false"></button>-->
+<!--            <ul class="dropdown-menu dropdown-menu-end" id="dropdownBasketItems">-->
+<!--            </ul>-->
+<!--        </div>-->
+
+        <form class="d-flex" role="login">
+            <div sec:authorize="isAuthenticated() == true" class="navbar-text">
+                Bonjour <span sec:authentication="principal.username"></span>&nbsp;(<a th:href="@{/logout}" href="#">Déconnexion</a>)
+            </div>
+            <div sec:authorize="isAuthenticated() == false" class="navbar-text">
+                <a th:href="@{/login}" href="#">Connexion</a>
+            </div>
+        </form>
+    </div>
+</nav>
+
+
+<!-- our site will use bootstrap container layout -->
+<div class="container">
+    <div class="jumbotron" th:replace="${content}">
+        <!-- content to templace -->
+        <p>Layout page, content gets here !</p>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+        crossorigin="anonymous"></script>
+</body>
+</html>

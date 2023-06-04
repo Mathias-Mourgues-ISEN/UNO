@@ -1,0 +1,32 @@
+<html th:replace="~{layout :: layout(~{::title}, ~{::content})}" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <title th:fragment="title">Authentification</title>
+</head>
+<body>
+<div th:fragment="content">
+    <meta sec:authorize="isAuthenticated() == true" http-equiv="refresh" content="0; url=/lobby" />
+    <form name="f" th:action="@{/login}" method="post">
+        <fieldset>
+            <legend>Authentification</legend>
+            <div th:if="${param.error}" class="alert alert-error">
+                L'identifiant et le mot de passe sont invalides
+            </div>
+            <div th:if="${param.logout}" class="alert alert-success">
+                Vous avez été déconnecté
+            </div>
+
+            <label for="username">Identifiant</label>
+            <input type="text" id="username" name="username" autocomplete="off" value="admin@gmail.com"/>
+            <label for="password">Mot de passe</label>
+            <input type="password" id="password" name="password" autocomplete="off" value="admin"/>
+            <div class="form-actions">
+                <button type="submit"  class="btn btn-primary">Connexion</button>
+            </div>
+        </fieldset>
+    </form>
+
+    <a href="#" th:href="@{/register}" class="btn btn-primary">Créer un compte</a>
+</div>
+</body>
+</html>
