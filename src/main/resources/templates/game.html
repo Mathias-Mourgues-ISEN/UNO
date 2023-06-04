@@ -63,7 +63,14 @@
     </style>
 </head>
 <body class="bg-dark text-white d-flex flex-column align-items-center justify-content-between">
-<meta sec:authorize="isAuthenticated() == false" http-equiv="refresh" content="0; url=/login"/>
+<div sec:authorize="isAuthenticated() == false">
+    <meta http-equiv="refresh" content="0; url=/login"/>
+    <style>
+        body {
+            display: none;
+        }
+    </style>
+</div>
 <div class="text-center">
     <h1 class="my-4" th:if="${playerID == game.getCurrentPlayer().getUuid()}">A TOI DE JOUER</h1>
 </div>

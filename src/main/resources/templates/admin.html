@@ -5,7 +5,15 @@
 </head>
 <body>
 <div th:fragment="content">
-    <meta sec:authorize="isAuthenticated() == false" http-equiv="refresh" content="0; url=/login"/>
+    <meta sec:authorize="!hasRole('ROLE_ADMIN')" http-equiv="refresh" content="0; url=/login"/>
+    <div sec:authorize="isAuthenticated() == false">
+        <meta http-equiv="refresh" content="0; url=/login"/>
+        <style>
+            body {
+                display: none;
+            }
+        </style>
+    </div>
     <h1>User Administration</h1>
     <table class="table">
         <thead>

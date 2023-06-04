@@ -5,7 +5,14 @@
 </head>
 <body>
 <div th:fragment="content">
-    <meta sec:authorize="isAuthenticated() == false" http-equiv="refresh" content="0; url=/login" />
+    <div sec:authorize="isAuthenticated() == false">
+        <meta http-equiv="refresh" content="0; url=/login"/>
+        <style>
+            body {
+                display: none;
+            }
+        </style>
+    </div>
     <h1>
         Bienvenue sur notre jeu UNO
     </h1>
