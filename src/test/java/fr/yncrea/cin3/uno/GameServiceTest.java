@@ -72,12 +72,20 @@ public class GameServiceTest {
 
     @Test
     public void testIsWinner() {
+
+        List<Player> players = new ArrayList<>();
+        players.add(player);
+        game.setPlayers(players);
+
+        // Vérification initiale : tous les joueurs ont les mains vides
         assertTrue(gameService.isWinner(game));
 
-        Card card = new Card("green", 4, "number", "green4");
-        game.getCurrentPlayer().getHand().add(card);
+        Card cardPlayed = new Card("blue", 3, "number", "blue3");
+        player.getHand().add(cardPlayed);
 
+        // Vérification : Le seul joueur n'a pas les mains vides
         assertFalse(gameService.isWinner(game));
+
     }
 
     @Test
