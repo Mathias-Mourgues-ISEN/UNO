@@ -120,13 +120,25 @@ public class GameController {
     }
 
 
-    @GetMapping("/game/draw")
-    @ResponseStatus(HttpStatus.SEE_OTHER) //Pour eviter d'avoir game/draw dans l'URL
-    public RedirectView drawCardAction(Model model) {
+    @GetMapping("/game/{gameId}/draw")
+    @ResponseStatus(HttpStatus.SEE_OTHER)
+    public RedirectView drawCardAction(Model model, @PathVariable String gameId, Authentication authentication) {
+        Game currentGame = currentGames.get(gameId);
 
-        gameService.drawCard(currentGame, currentGame.getCurrentPlayer());
+        String username = authentication.getName();
+
+        Player currentPlayer = currentGame.getPlayers().stream()
+                .filter(player -> player.getUser().getUsername().equals(username))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Current user is not part of the game"));
+
+        gameService.drawCard(currentGame, currentPlayer);
+        gameService.nextPlayer(currentGame);
+
         model.addAttribute("game", currentGame);
-        return new RedirectView("/game");  //Pour eviter d'avoir game/draw dans l'URL sinon le joueur peut piocher apres un refresh
+
+        return new RedirectView("/game/{gameId}");
     }
+
 
 }

@@ -89,7 +89,7 @@
                 <img th:src="@{/cardImg/{link}.png(link=${card.link})}" alt="Image">
             </div>
         </div>
-        <a href="/game/draw" class="btn btn-primary">Piocher</a>
+        <a class="btn btn-primary" th:if="${playerID == game.getCurrentPlayer().getUuid()}" th:href="@{/game/{gameId}/draw(gameId=${game.getUuid()})}">Piocher</a>
     </div>
 </div>
 

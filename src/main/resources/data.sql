@@ -107,10 +107,10 @@ INSERT INTO public.card VALUES ('dd57a759-b07d-4582-9ec1-abfec6fbe216', 'black',
 INSERT INTO public.card VALUES ('d391b416-f1ed-46b9-872d-5ba8b44a5eab', 'black', 'superJoker', -1, 'wild_draw_four')ON CONFLICT DO NOTHING;
 INSERT INTO public.card VALUES ('9878b8c1-495e-47b0-8d27-91da512e1ce3', 'black', 'superJoker', -1, 'wild_draw_four')ON CONFLICT DO NOTHING;
 
-INSERT INTO public.authority (uuid, authority) VALUES ('00000000-0000-0000-0000-000000000000', 'ROLE_ADMIN') ON CONFLICT DO NOTHING;
-INSERT INTO public.user_authorities (user_uuid, authorities_uuid) VALUES ('00000000-0000-0000-0000-000000000000', '00000000-0000-0000-0000-000000000000') ON CONFLICT DO NOTHING;
-INSERT INTO public.user (uuid, enabled, password, pseudo, username) VALUES ('00000000-0000-0000-0000-000000000000',true,'$2a$10$NlJM/G4v9.AUQqEIjUsi2.uf7WIFiF6j0FWvNnibBWQ.UB9AaV9uG','admin','admin@gmail.com') ON CONFLICT DO NOTHING;
-INSERT INTO public.user (uuid, enabled, password, pseudo, username) VALUES ('4995b522-a5a4-40bb-8344-484bb282b7ae',true,'$2a$10$zVKFxP/FhyMi5jgnojlkH.tZr5RnVFq5eRZ53O96.DjcXPSZqd2N2','Anthony','anthony@gmail.com') ON CONFLICT DO NOTHING;
-INSERT INTO public.user (uuid, enabled, password, pseudo, username) VALUES ('0699763e-0154-4c2b-a76d-eb84c9f6f200',true,'$2a$10$y8LMrHvBZsYv36oSi6AJ2OMA.P1sakXGwOOEuQfPsnGV4vr7zX9Bi','Baptiste','baptiste@gmail.com') ON CONFLICT DO NOTHING;
-INSERT INTO public.user (uuid, enabled, password, pseudo, username) VALUES ('f91bc1e8-8198-4af7-bac7-552a8e2c744e',true,'$2a$10$S6ulCRAmsMAcF1y.6sr50emsHxu0zDmAO/miKmhata40i7eOO0Bl6','Aymeric','aymeric@gmail.com') ON CONFLICT DO NOTHING;
-INSERT INTO public.user (uuid, enabled, password, pseudo, username) VALUES ('0cdf0b73-e957-4fb8-bb13-40ec55c78735',true,'$2a$10$DcwdkPYxn.CQO/SNqNbtWuRuHmzXh.an5UZi.aebYlvXl/EbrQ7jS','Mathias','mathias@gmail.com') ON CONFLICT DO NOTHING;
+-- INSERT INTO public.authority (uuid, authority) VALUES ('00000000-0000-0000-0000-000000000000', 'ROLE_ADMIN') ON CONFLICT DO NOTHING;
+-- INSERT INTO public.user_authorities (user_uuid, authorities_uuid) VALUES ('00000000-0000-0000-0000-000000000000', '00000000-0000-0000-0000-000000000000') ON CONFLICT DO NOTHING;
+-- INSERT INTO public.user (uuid, enabled, password, pseudo, username) VALUES ('00000000-0000-0000-0000-000000000000',true,'$2a$10$NlJM/G4v9.AUQqEIjUsi2.uf7WIFiF6j0FWvNnibBWQ.UB9AaV9uG','admin','admin@gmail.com') ON CONFLICT DO NOTHING;
+-- INSERT INTO public.user (uuid, enabled, password, pseudo, username) VALUES ('4995b522-a5a4-40bb-8344-484bb282b7ae',true,'$2a$10$zVKFxP/FhyMi5jgnojlkH.tZr5RnVFq5eRZ53O96.DjcXPSZqd2N2','Anthony','anthony@gmail.com') ON CONFLICT DO NOTHING;
+-- INSERT INTO public.user (uuid, enabled, password, pseudo, username) VALUES ('0699763e-0154-4c2b-a76d-eb84c9f6f200',true,'$2a$10$y8LMrHvBZsYv36oSi6AJ2OMA.P1sakXGwOOEuQfPsnGV4vr7zX9Bi','Baptiste','baptiste@gmail.com') ON CONFLICT DO NOTHING;
+-- INSERT INTO public.user (uuid, enabled, password, pseudo, username) VALUES ('f91bc1e8-8198-4af7-bac7-552a8e2c744e',true,'$2a$10$S6ulCRAmsMAcF1y.6sr50emsHxu0zDmAO/miKmhata40i7eOO0Bl6','Aymeric','aymeric@gmail.com') ON CONFLICT DO NOTHING;
+-- INSERT INTO public.user (uuid, enabled, password, pseudo, username) VALUES ('0cdf0b73-e957-4fb8-bb13-40ec55c78735',true,'$2a$10$DcwdkPYxn.CQO/SNqNbtWuRuHmzXh.an5UZi.aebYlvXl/EbrQ7jS','Mathias','mathias@gmail.com') ON CONFLICT DO NOTHING;
