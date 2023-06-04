@@ -19,6 +19,8 @@
             display: flex;
             overflow-x: auto;
             gap: 1rem;
+            overflow: visible; /* Ajout de cette propriété pour empêcher la rognure de la carte au survol */
+            position: relative; /* Ajout de cette propriété pour permettre à la carte de sortir de la div lors du survol */
         }
 
         .card {
@@ -36,6 +38,7 @@
         .card:hover, .card.hover {
             filter: none;
             transform: scale(1.08) translateZ(0);
+            z-index: 1; /* Ajout de cette propriété pour s'assurer que la carte survolée est au-dessus des autres éléments */
         }
 
         .card-grid::-webkit-scrollbar {
