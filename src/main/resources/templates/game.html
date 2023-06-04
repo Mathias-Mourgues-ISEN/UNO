@@ -55,17 +55,17 @@
 <body class="bg-dark text-white d-flex flex-column align-items-center justify-content-between">
 <meta sec:authorize="isAuthenticated() == false" http-equiv="refresh" content="0; url=/login"/>
 <div class="text-center">
-    <h2 class="my-4">UNO</h2>
+    <h1 class="my-4" th:if="${playerID == game.getCurrentPlayer().getUuid()}">A TOI DE JOUER</h1>
 </div>
 <div class="container my-4 text-center">
-    <h2 th:text="${game.players.get(playerTop - 1).getName()}"></h2>
-    <h3>Nombre de cartes : <span th:text="${game.players.get(playerTop - 1).hand.size()}"></span></h3>
+    <h2 th:text="${game.players.get(playerTop).getName()}"></h2>
+    <h3>Nombre de cartes : <span th:text="${game.players.get(playerTop).hand.size()}"></span></h3>
 </div>
 
 <div class="container d-flex justify-content-around my-4">
     <div class="text-left">
-        <h2 th:text="${game.players.get(playerLeft - 1).getName()}"></h2>
-        <h3>Nombre de cartes : <span th:text="${game.players.get(playerLeft - 1).hand.size()}"></span></h3>
+        <h2 th:text="${game.players.get(playerLeft).getName()}"></h2>
+        <h3>Nombre de cartes : <span th:text="${game.players.get(playerLeft).hand.size()}"></span></h3>
     </div>
     <div class="text-center">
         <h2>Pioche</h2>
@@ -76,8 +76,8 @@
         <img th:src="@{/cardImg/{link}.png(link=${game.getCurrentCard().link})}" width="100">
     </div>
     <div class="text-right">
-        <h2 th:text="${game.players.get(playerRight - 1).getName()}"></h2>
-        <h3>Nombre de cartes : <span th:text="${game.players.get(playerRight - 1).hand.size()}"></span></h3>
+        <h2 th:text="${game.players.get(playerRight).getName()}"></h2>
+        <h3>Nombre de cartes : <span th:text="${game.players.get(playerRight).hand.size()}"></span></h3>
     </div>
 </div>
 
@@ -109,7 +109,7 @@
             console.log('Received game state update');
             setTimeout(function() {
                 location.reload();
-            }, 1000);
+            }, 100);
         });
 
         stompClient.subscribe('/topic/win/' + gameId, function (gameState) {
