@@ -35,6 +35,13 @@
             filter: brightness(0.5) blur(10px);
         }
 
+        .color-square {
+             width: 50px;
+             height: 50px;
+             margin: 5px;
+             cursor: pointer;
+        }
+
         .card:hover, .card.hover {
             filter: none;
             transform: scale(1.08) translateZ(0);
@@ -84,6 +91,17 @@
     </div>
 </div>
 
+<dialog id="color-dialog" style="background-color: black; color: white;">
+    <h3>Choisissez une couleur :</h3>
+    <div style="display: flex; justify-content: space-between;">
+        <div class="color-square" style="background-color: blue;" onclick="selectColor('blue')"></div>
+        <div class="color-square" style="background-color: red;" onclick="selectColor('red')"></div>
+        <div class="color-square" style="background-color: green;" onclick="selectColor('green')"></div>
+        <div class="color-square" style="background-color: yellow;" onclick="selectColor('yellow')"></div>
+    </div>
+</dialog>
+
+
 <div class="container my-4">
     <h2 th:text="${game.players.get(currentPlayer).getName()}" class="text-center"></h2>
     <h2 class="text-center">Mon jeu</h2>
@@ -132,8 +150,25 @@
         return null;
     }
 
+    function selectColor(color) {
+        fetch('/game/' + gameId + '/' + color, {
+                            method: 'GET'
+                        })
+                            .then(response => {
+                                if (response.ok) {
+                                    console.log("Couleur sélectionnée :", color);
+                                    document.getElementById("color-dialog").close();
+                                    return response.json();
+                                } else {
+                                    console.error('Erreur lors de la requête. Statut :', response.status);
+                                }
+                            })
+    }
+
+
     document.addEventListener('DOMContentLoaded', function () {
         let cards = document.querySelectorAll('.card');
+        let colorButton = document.querySelectorAll('.color-square');
 
         cards.forEach(card => {
             card.addEventListener('mouseover', function () {
@@ -171,6 +206,9 @@
                                 }
                             })
                             .then(data => {
+                                if (data.isBlackCard) {
+                                    document.getElementById('color-dialog').showModal();
+                                }
                                 if (data.cardCanBePlayed) {
                                     let cardImgSrc = this.querySelector('img').getAttribute('src');
 
