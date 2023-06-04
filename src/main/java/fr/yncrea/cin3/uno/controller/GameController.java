@@ -86,9 +86,9 @@ public class GameController {
         int currentPlayerNumber = currentPlayer.getNumber();
 
         // Assuming the numbers are from 1 to 4
-        int nextPlayerNumber = (currentPlayerNumber % 4) + 1;
-        int nextToNextPlayerNumber = (nextPlayerNumber % 4) + 1;
-        int nextToNextToNextPlayerNumber = (nextToNextPlayerNumber % 4) + 1;
+        int nextPlayerNumber = ((currentPlayerNumber + 1) % 4) ;
+        int nextToNextPlayerNumber = ((nextPlayerNumber + 1) % 4) ;
+        int nextToNextToNextPlayerNumber = ((nextToNextPlayerNumber + 1) % 4) ;
 
         model.addAttribute("playerLeft", nextPlayerNumber);
         model.addAttribute("playerTop", nextToNextPlayerNumber);
@@ -119,8 +119,9 @@ public class GameController {
 
     @GetMapping("/win/{gameId}")
     public String win(@PathVariable String gameId, Model model) {
-        // Utilisez gameId ici si nécessaire, par exemple pour récupérer des informations sur la partie
-        // ...
+        Game currentGame = currentGames.get(gameId);
+
+        model.addAttribute("player", currentGame.getCurrentPlayer().getName());
 
         return "win"; // Assurez-vous d'avoir une vue "win".
     }

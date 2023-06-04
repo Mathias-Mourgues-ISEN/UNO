@@ -27,10 +27,10 @@ public class GameService {
     public Game initializeGame(String lobbyId, List<User> users) {
         Game game = new Game(UUID.fromString(lobbyId));
 
-        Player player1 = new Player("Player 1", users.get(0).getUuid(), users.get(0), 0);
-        Player player2 = new Player("Player 2", users.get(1).getUuid(), users.get(1), 1);
-        Player player3 = new Player("Player 3", users.get(2).getUuid(), users.get(2), 2);
-        Player player4 = new Player("Player 4", users.get(3).getUuid(), users.get(3), 3);
+        Player player1 = new Player(users.get(0).getUsername(), users.get(0).getUuid(), users.get(0), 0);
+        Player player2 = new Player(users.get(1).getUsername(), users.get(1).getUuid(), users.get(1), 1);
+        Player player3 = new Player(users.get(2).getUsername(), users.get(2).getUuid(), users.get(2), 2);
+        Player player4 = new Player(users.get(3).getUsername(), users.get(3).getUuid(), users.get(3), 3);
 
         List<Player> players = Arrays.asList(player1, player2, player3, player4);
         game.setPlayers(players);
@@ -49,7 +49,11 @@ public class GameService {
                 player.getHand().add(game.getDeck().remove(0));
             }
         }
+        while (game.getDeck().get(0).getNumber() == -1){
+            game.getDeck().add(game.getDeck().get(0));
+            game.getDeck().remove(0);
 
+        }
         game.setCurrentCard(game.getDeck().remove(0));
 
         gameRepository.save(game);
@@ -71,7 +75,7 @@ public class GameService {
         Card currentCard = game.getCurrentCard();
 
 
-        if(player.equals(game.getCurrentPlayer())) {
+        if (player.equals(game.getCurrentPlayer())) {
             // Vérification que la carte peut être jouée
             if (cardPlayed.getColor().equals(currentCard.getColor()) ||
                     cardPlayed.getNumber() == currentCard.getNumber() && cardPlayed.getNumber() != -1 ||
@@ -140,7 +144,7 @@ public class GameService {
         }
     }
 
-    public void reverse(Game game){
+    public void reverse(Game game) {
         game.setRotation(-game.getRotation());
     }
 
@@ -162,6 +166,7 @@ public class GameService {
         nextPlayer(game);
         nextPlayer(game);
     }
+
     @Transactional
     public boolean isGameExist(String lobbyId) {
         return gameRepository.existsById(UUID.fromString(lobbyId));
