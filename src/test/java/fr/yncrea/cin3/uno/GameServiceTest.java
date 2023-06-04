@@ -48,11 +48,19 @@ public class GameServiceTest {
 
     @Test
     public void testPlayCard() {
+        Player player1 = new Player("Player 1", UUID.randomUUID(), new User(), 0);
+        Player player2 = new Player("Player 2", UUID.randomUUID(), new User(), 1);
+
+        List<Player> players = Arrays.asList(player1, player2);
+        game.setPlayers(players);
+
         Card currentCard = new Card("blue", 2, "number", "blue2");
         game.setCurrentCard(currentCard);
 
         Card cardPlayed = new Card("blue", 3, "number", "blue3");
         player.getHand().add(cardPlayed);
+
+        game.setCurrentPlayer(player); // Définir le joueur courant
 
         boolean result = gameService.playCard(game, player, cardPlayed);
 
