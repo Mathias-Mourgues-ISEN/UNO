@@ -28,6 +28,8 @@ public class Game {
 
     private int rotation;
 
+    private String forceColor;
+
     @OneToOne(cascade = CascadeType.ALL)
     private Card currentCard;
 

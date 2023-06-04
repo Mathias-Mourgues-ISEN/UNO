@@ -102,14 +102,26 @@ public class GameController {
     @GetMapping("/cards/{gameId}/{id}")
     public ResponseEntity<Map<String, Boolean>> playCardAction(@PathVariable String gameId, @PathVariable UUID id) {
         Game currentGame = currentGames.get(gameId); // Retrieve the game using gameId
-
         Card card = cardRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Error message"));
         boolean cardCanBePlayed = gameService.playCard(currentGame, currentGame.getCurrentPlayer(), card);
+        boolean isBlackCard = card.getColor().equals("black");
         Map<String, Boolean> response = new HashMap<>();
         response.put("cardCanBePlayed", cardCanBePlayed);
         response.put("hasWon", currentGame.getCurrentPlayer().getHand().isEmpty());
-        if (cardCanBePlayed) messagingTemplate.convertAndSend("/topic/game/" + gameId, currentGame);
+        response.put("isBlackCard", isBlackCard);
+        if (cardCanBePlayed && !isBlackCard) messagingTemplate.convertAndSend("/topic/game/" + gameId, currentGame);
 
+
+        return ResponseEntity.ok(response);
+    }
+
+
+    @GetMapping("/game/{gameId}/{color}")
+    public ResponseEntity<Map<String, Boolean>> playBlackCard(@PathVariable String gameId, @PathVariable String color) {
+        Game currentGame = currentGames.get(gameId); // Retrieve the game using gameId
+        gameService.forcingColor(currentGame, color);
+        Map<String, Boolean> response = new HashMap<>();
+        messagingTemplate.convertAndSend("/topic/game/" + gameId, currentGame);
 
         return ResponseEntity.ok(response);
     }

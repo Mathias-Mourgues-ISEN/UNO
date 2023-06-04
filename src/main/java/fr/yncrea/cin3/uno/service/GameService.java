@@ -66,6 +66,12 @@ public class GameService {
         player.getHand().add(card);
     }
 
+    public void forcingColor(Game game, String color){
+        System.out.println(color);
+        game.setForceColor(color);
+        gameRepository.save(game);
+    }
+
     public boolean playCard(Game game, Player player, Card cardPlayed) {
         // Récupération de la carte du dessus du deck
         Card currentCard = game.getCurrentCard();
@@ -73,7 +79,21 @@ public class GameService {
 
         if(player.equals(game.getCurrentPlayer())) {
             // Vérification que la carte peut être jouée
-            if (cardPlayed.getColor().equals(currentCard.getColor()) ||
+            if(game.getCurrentCard().getColor().equals("black")){
+                if(cardPlayed.getColor().equals(game.getForceColor())){
+                    //mettre currentcard a la fin de la pioche deck
+                    game.getDeck().add(currentCard);
+                    // Suppression de la carte de la main du joueur
+                    player.getHand().remove(cardPlayed);
+                    // Mise à jour de la carte du dessus du deck
+                    game.setCurrentCard(cardPlayed);
+                    System.out.println(game.getCurrentPlayer().getNumber());
+                    nextPlayer(game);
+                    System.out.println(game.getCurrentPlayer().getNumber());
+                    return true;
+                }
+            }
+            else if (cardPlayed.getColor().equals(currentCard.getColor()) ||
                     cardPlayed.getNumber() == currentCard.getNumber() && cardPlayed.getNumber() != -1 ||
                     cardPlayed.getColor().equals("black") ||
                     currentCard.getColor().equals("black") ||
