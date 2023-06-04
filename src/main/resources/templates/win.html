@@ -1,8 +1,11 @@
 <!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Gagnant du jeu Uno</title>
     <style>
         body {
@@ -57,9 +60,9 @@
 <body>
 <h1>Gagnant du jeu Uno</h1>
 <div class="winner">
-    <h2 id="winnerName">Le gagnant est : [Nom du gagnant]</h2>
+    <h2 id="winnerName" th:text="${player}">Le gagnant est : [Nom du gagnant]</h2>
 </div>
-<a href="/lobby" class="button" id="backButton">Retour au jeu</a>
+<a href="/lobby" class="button" id="backButton">Retour au lobby</a>
 
 <script>
     // Animation pour afficher progressivement le nom du gagnant

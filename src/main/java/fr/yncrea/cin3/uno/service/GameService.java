@@ -27,10 +27,10 @@ public class GameService {
     public Game initializeGame(String lobbyId, List<User> users) {
         Game game = new Game(UUID.fromString(lobbyId));
 
-        Player player1 = new Player("Player 1", users.get(0).getUuid(), users.get(0), 0);
-        Player player2 = new Player("Player 2", users.get(1).getUuid(), users.get(1), 1);
-        Player player3 = new Player("Player 3", users.get(2).getUuid(), users.get(2), 2);
-        Player player4 = new Player("Player 4", users.get(3).getUuid(), users.get(3), 3);
+        Player player1 = new Player(users.get(0).getUsername(), users.get(0).getUuid(), users.get(0), 0);
+        Player player2 = new Player(users.get(1).getUsername(), users.get(1).getUuid(), users.get(1), 1);
+        Player player3 = new Player(users.get(2).getUsername(), users.get(2).getUuid(), users.get(2), 2);
+        Player player4 = new Player(users.get(3).getUsername(), users.get(3).getUuid(), users.get(3), 3);
 
         List<Player> players = Arrays.asList(player1, player2, player3, player4);
         game.setPlayers(players);
@@ -49,7 +49,11 @@ public class GameService {
                 player.getHand().add(game.getDeck().remove(0));
             }
         }
+        while (game.getDeck().get(0).getNumber() == -1){
+            game.getDeck().add(game.getDeck().get(0));
+            game.getDeck().remove(0);
 
+        }
         game.setCurrentCard(game.getDeck().remove(0));
 
         gameRepository.save(game);
@@ -77,7 +81,7 @@ public class GameService {
         Card currentCard = game.getCurrentCard();
 
 
-        if(player.equals(game.getCurrentPlayer())) {
+        if (player.equals(game.getCurrentPlayer())) {
             // Vérification que la carte peut être jouée
             if(game.getCurrentCard().getColor().equals("black")){
                 if(cardPlayed.getColor().equals(game.getForceColor())){
@@ -104,9 +108,25 @@ public class GameService {
                 player.getHand().remove(cardPlayed);
                 // Mise à jour de la carte du dessus du deck
                 game.setCurrentCard(cardPlayed);
-                System.out.println(game.getCurrentPlayer().getNumber());
+
+                if(cardPlayed.getSymbol().equals("reverse")) {
+                    System.out.println("reverse");
+                    reverse(game);
+                }
+                if(cardPlayed.getSymbol().equals("skip")) {
+                    System.out.println("skip");
+                    skipTurn(game);
+                }
+                if(cardPlayed.getSymbol().equals("draw_two")) {
+                    System.out.println("draw_two");
+                    plusTwo(game);
+                }
+                if(cardPlayed.getSymbol().equals("wild_draw_four")) {
+                    System.out.println("draw_four");
+                    plusFour(game);
+                }
+
                 nextPlayer(game);
-                System.out.println(game.getCurrentPlayer().getNumber());
                 return true;
             }
         }
@@ -116,7 +136,12 @@ public class GameService {
 
     //WIN
     public boolean isWinner(Game game) {
-        return game.getCurrentPlayer().getHand().isEmpty();
+        for (Player player : game.getPlayers()) {
+            if (player.getHand().isEmpty()) {
+                return true;
+            }
+        }
+        return false;
     }
 
 
@@ -136,6 +161,7 @@ public class GameService {
         for (int i = 0; i < 2; i++) {
             drawCard(game, victim);
         }
+        nextPlayer(game);
     }
 
     public void plusFour(Game game) {
@@ -153,9 +179,10 @@ public class GameService {
         for (int i = 0; i < 4; i++) {
             drawCard(game, victim);
         }
+        nextPlayer(game);
     }
 
-    public void reverse(Game game){
+    public void reverse(Game game) {
         game.setRotation(-game.getRotation());
     }
 
@@ -175,8 +202,8 @@ public class GameService {
 
     public void skipTurn(Game game) {
         nextPlayer(game);
-        nextPlayer(game);
     }
+
     @Transactional
     public boolean isGameExist(String lobbyId) {
         return gameRepository.existsById(UUID.fromString(lobbyId));

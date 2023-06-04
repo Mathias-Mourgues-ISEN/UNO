@@ -85,14 +85,14 @@ public class GameController {
 
         int currentPlayerNumber = currentPlayer.getNumber();
 
-        // Assuming the numbers are from 1 to 4
-        int nextPlayerNumber = (currentPlayerNumber % 4) + 1;
-        int nextToNextPlayerNumber = (nextPlayerNumber % 4) + 1;
-        int nextToNextToNextPlayerNumber = (nextToNextPlayerNumber % 4) + 1;
+        int nextPlayerNumber = ((currentPlayerNumber + 1) % 4) ;
+        int nextToNextPlayerNumber = ((nextPlayerNumber + 1) % 4) ;
+        int nextToNextToNextPlayerNumber = ((nextToNextPlayerNumber + 1) % 4) ;
 
         model.addAttribute("playerLeft", nextPlayerNumber);
         model.addAttribute("playerTop", nextToNextPlayerNumber);
         model.addAttribute("playerRight", nextToNextToNextPlayerNumber);
+        model.addAttribute("currentPlayer", currentPlayerNumber);
 
 
         return "game";
@@ -107,14 +107,17 @@ public class GameController {
         boolean isBlackCard = card.getColor().equals("black");
         Map<String, Boolean> response = new HashMap<>();
         response.put("cardCanBePlayed", cardCanBePlayed);
-        response.put("hasWon", currentGame.getCurrentPlayer().getHand().isEmpty());
         response.put("isBlackCard", isBlackCard);
         if (cardCanBePlayed && !isBlackCard) messagingTemplate.convertAndSend("/topic/game/" + gameId, currentGame);
 
+        if (gameService.isWinner(currentGame)) {
+            messagingTemplate.convertAndSend("/topic/win/" + gameId, currentGame);
+        }
 
+        if (cardCanBePlayed) messagingTemplate.convertAndSend("/topic/game/" + gameId, currentGame);
+      
         return ResponseEntity.ok(response);
     }
-
 
     @GetMapping("/game/{gameId}/{color}")
     public ResponseEntity<Map<String, Boolean>> playBlackCard(@PathVariable String gameId, @PathVariable String color) {
@@ -126,10 +129,15 @@ public class GameController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/win")
-    public String win(Model model) {
-        return "win"; // Assurez-vous d'avoir une vue "win".
+    @GetMapping("/win/{gameId}")
+    public String win(@PathVariable String gameId, Model model) {
+        Game currentGame = currentGames.get(gameId);
+
+        model.addAttribute("player", currentGame.getCurrentPlayer().getName());
+
+        return "win";
     }
+
 
 
     @GetMapping("/game/{gameId}/draw")
