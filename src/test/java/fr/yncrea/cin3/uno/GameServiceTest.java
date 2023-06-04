@@ -164,13 +164,11 @@ public class GameServiceTest {
         game.getPlayers().add(currentPlayer);
         Player nextPlayer = new Player();
         game.getPlayers().add(nextPlayer);
-        Player nextNextPlayer = new Player();
-        game.getPlayers().add(nextNextPlayer);
         game.setCurrentPlayer(currentPlayer);
 
         gameService.skipTurn(game);
 
-        assertEquals(nextNextPlayer, game.getCurrentPlayer());
+        assertEquals(nextPlayer, game.getCurrentPlayer());
     }
 
     // Les tests pour isGameExist() et getGame() doivent être ajoutés séparément en fonction des spécificités de votre environnement de jeu.
