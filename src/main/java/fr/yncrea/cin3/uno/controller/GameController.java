@@ -113,8 +113,6 @@ public class GameController {
         if (gameService.isWinner(currentGame)) {
             messagingTemplate.convertAndSend("/topic/win/" + gameId, currentGame);
         }
-
-        if (cardCanBePlayed) messagingTemplate.convertAndSend("/topic/game/" + gameId, currentGame);
       
         return ResponseEntity.ok(response);
     }

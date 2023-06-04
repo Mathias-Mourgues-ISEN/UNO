@@ -84,7 +84,7 @@ public class GameService {
         if (player.equals(game.getCurrentPlayer())) {
             // Vérification que la carte peut être jouée
             if(game.getCurrentCard().getColor().equals("black")){
-                if(cardPlayed.getColor().equals(game.getForceColor())){
+                if(cardPlayed.getColor().equals(game.getForceColor()) || cardPlayed.getColor().equals("black")){
                     //mettre currentcard a la fin de la pioche deck
                     game.getDeck().add(currentCard);
                     // Suppression de la carte de la main du joueur
