@@ -106,9 +106,19 @@
     stompClient.connect({}, function (frame) {
         console.log('Connected: ' + frame);
         stompClient.subscribe('/topic/game/' + gameId, function (gameState) {
-            location.reload();
+            console.log('Received game state update');
+            setTimeout(function() {
+                location.reload();
+            }, 1000);
         });
+
+        stompClient.subscribe('/topic/win/' + gameId, function (gameState) {
+            console.log('Received win notification');
+            window.location.href = '/win/' + gameId;
+        });
+
     });
+
 
     function extractGameIdFromUrl(url) {
         const match = url.match(/\/game\/([^/]+)/);
