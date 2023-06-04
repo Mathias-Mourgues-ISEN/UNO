@@ -38,7 +38,6 @@ public class GameService {
         Random random = new Random();
         Player firstPlayer = players.get(random.nextInt(players.size()));
         game.setCurrentPlayer(firstPlayer);
-        System.out.println(game.getCurrentPlayer().getNumber());
 
         var cards = cardRepository.findAll();
         Collections.shuffle(cards);
@@ -71,7 +70,6 @@ public class GameService {
     }
 
     public void forcingColor(Game game, String color){
-        System.out.println(color);
         game.setForceColor(color);
         gameRepository.save(game);
     }
@@ -91,9 +89,7 @@ public class GameService {
                     player.getHand().remove(cardPlayed);
                     // Mise à jour de la carte du dessus du deck
                     game.setCurrentCard(cardPlayed);
-                    System.out.println(game.getCurrentPlayer().getNumber());
                     nextPlayer(game);
-                    System.out.println(game.getCurrentPlayer().getNumber());
                     return true;
                 }
             }
@@ -110,19 +106,15 @@ public class GameService {
                 game.setCurrentCard(cardPlayed);
 
                 if(cardPlayed.getSymbol().equals("reverse")) {
-                    System.out.println("reverse");
                     reverse(game);
                 }
                 if(cardPlayed.getSymbol().equals("skip")) {
-                    System.out.println("skip");
                     skipTurn(game);
                 }
                 if(cardPlayed.getSymbol().equals("draw_two")) {
-                    System.out.println("draw_two");
                     plusTwo(game);
                 }
                 if(cardPlayed.getSymbol().equals("wild_draw_four")) {
-                    System.out.println("draw_four");
                     plusFour(game);
                 }
 
