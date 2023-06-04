@@ -88,9 +88,25 @@ public class GameService {
                 player.getHand().remove(cardPlayed);
                 // Mise à jour de la carte du dessus du deck
                 game.setCurrentCard(cardPlayed);
-                System.out.println(game.getCurrentPlayer().getNumber());
+
+                if(cardPlayed.getSymbol().equals("reverse")) {
+                    System.out.println("reverse");
+                    reverse(game);
+                }
+                if(cardPlayed.getSymbol().equals("skip")) {
+                    System.out.println("skip");
+                    skipTurn(game);
+                }
+                if(cardPlayed.getSymbol().equals("draw_two")) {
+                    System.out.println("draw_two");
+                    plusTwo(game);
+                }
+                if(cardPlayed.getSymbol().equals("wild_draw_four")) {
+                    System.out.println("draw_four");
+                    plusFour(game);
+                }
+
                 nextPlayer(game);
-                System.out.println(game.getCurrentPlayer().getNumber());
                 return true;
             }
         }
@@ -125,6 +141,7 @@ public class GameService {
         for (int i = 0; i < 2; i++) {
             drawCard(game, victim);
         }
+        nextPlayer(game);
     }
 
     public void plusFour(Game game) {
@@ -142,6 +159,7 @@ public class GameService {
         for (int i = 0; i < 4; i++) {
             drawCard(game, victim);
         }
+        nextPlayer(game);
     }
 
     public void reverse(Game game) {
@@ -163,7 +181,6 @@ public class GameService {
     }
 
     public void skipTurn(Game game) {
-        nextPlayer(game);
         nextPlayer(game);
     }
 
