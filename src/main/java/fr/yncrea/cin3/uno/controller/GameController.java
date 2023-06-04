@@ -107,17 +107,24 @@ public class GameController {
         boolean cardCanBePlayed = gameService.playCard(currentGame, currentGame.getCurrentPlayer(), card);
         Map<String, Boolean> response = new HashMap<>();
         response.put("cardCanBePlayed", cardCanBePlayed);
-        response.put("hasWon", currentGame.getCurrentPlayer().getHand().isEmpty());
+        if (gameService.isWinner(currentGame)) {
+            messagingTemplate.convertAndSend("/topic/win/" + gameId, currentGame);
+        }
+
         if (cardCanBePlayed) messagingTemplate.convertAndSend("/topic/game/" + gameId, currentGame);
 
 
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/win")
-    public String win(Model model) {
+    @GetMapping("/win/{gameId}")
+    public String win(@PathVariable String gameId, Model model) {
+        // Utilisez gameId ici si nécessaire, par exemple pour récupérer des informations sur la partie
+        // ...
+
         return "win"; // Assurez-vous d'avoir une vue "win".
     }
+
 
 
     @GetMapping("/game/{gameId}/draw")

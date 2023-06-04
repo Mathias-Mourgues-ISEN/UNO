@@ -96,7 +96,12 @@ public class GameService {
 
     //WIN
     public boolean isWinner(Game game) {
-        return game.getCurrentPlayer().getHand().isEmpty();
+        for (Player player : game.getPlayers()) {
+            if (player.getHand().isEmpty()) {
+                return true;
+            }
+        }
+        return false;
     }
 
 
