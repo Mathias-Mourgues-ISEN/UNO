@@ -89,6 +89,9 @@ public class GameService {
                     player.getHand().remove(cardPlayed);
                     // Mise à jour de la carte du dessus du deck
                     game.setCurrentCard(cardPlayed);
+                    if(cardPlayed.getSymbol().equals("wild_draw_four")) {
+                        plusFour(game);
+                    }
                     nextPlayer(game);
                     return true;
                 }
@@ -113,9 +116,6 @@ public class GameService {
                 }
                 if(cardPlayed.getSymbol().equals("draw_two")) {
                     plusTwo(game);
-                }
-                if(cardPlayed.getSymbol().equals("wild_draw_four")) {
-                    plusFour(game);
                 }
 
                 nextPlayer(game);
