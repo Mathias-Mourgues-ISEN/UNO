@@ -25,15 +25,13 @@ public class GameService {
 
 
     public Game initializeGame(String lobbyId, List<User> users) {
-        // Création de l'objet UnoGame et association avec les joueurs et le deck
         Game game = new Game(UUID.fromString(lobbyId));
-        // Création des joueurs
+
         Player player1 = new Player("Player 1", users.get(0).getUuid(), users.get(0), 0);
         Player player2 = new Player("Player 2", users.get(1).getUuid(), users.get(1), 1);
         Player player3 = new Player("Player 3", users.get(2).getUuid(), users.get(2), 2);
-        Player player4 = new Player("Player 4", users.get(3).getUuid() ,users.get(3), 3);
+        Player player4 = new Player("Player 4", users.get(3).getUuid(), users.get(3), 3);
 
-        //ajout des players dans game
         List<Player> players = Arrays.asList(player1, player2, player3, player4);
         game.setPlayers(players);
 
@@ -43,27 +41,22 @@ public class GameService {
         System.out.println(game.getCurrentPlayer().getNumber());
 
         var cards = cardRepository.findAll();
-        //aficher les cartes link
         Collections.shuffle(cards);
         game.setDeck(cards);
-        game.setCurrentPlayer(player1);
-        // Distribution des cartes
+
         for (int i = 0; i < 7; i++) {
             for (Player player : players) {
                 player.getHand().add(game.getDeck().remove(0));
             }
         }
 
-        // Distribution de la carte retournée
         game.setCurrentCard(game.getDeck().remove(0));
 
-        //save les cards en base
         gameRepository.save(game);
-        // Enregistrement des joueurs en base de données
         playerRepository.saveAll(Arrays.asList(player1, player2, player3, player4));
-        // Enregistrement de l'objet UnoGame en base de données
         return game;
     }
+
 
     //BASIC GAME LOGIC
     public void drawCard(Game game, Player player) {

@@ -131,7 +131,7 @@ public class GameController {
                 .filter(player -> player.getUser().getUsername().equals(username))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("Current user is not part of the game"));
-
+        messagingTemplate.convertAndSend("/topic/game/" + gameId, currentGame);
         gameService.drawCard(currentGame, currentPlayer);
         gameService.nextPlayer(currentGame);
 
