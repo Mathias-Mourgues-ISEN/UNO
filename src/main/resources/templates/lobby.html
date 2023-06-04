@@ -2,13 +2,20 @@
         th:replace="~{layout :: layout(~{::title}, ~{::content})}"
         xmlns:th="http://www.thymeleaf.org"
         xmlns="http://www.w3.org/1999/html" xmlns:sec="http://www.w3.org/1999/xhtml">
-        xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <title th:fragment="title">Lobby</title>
 </head>
 <body>
 <div th:fragment="content" class="container">
-    <meta sec:authorize="isAuthenticated() == false" http-equiv="refresh" content="0; url=/login" />
+    <div sec:authorize="isAuthenticated() == false">
+        <meta http-equiv="refresh" content="0; url=/login"/>
+        <style>
+            body {
+                display: none;
+            }
+        </style>
+    </div>
     <h1 class="my-4">Créer d'une partie</h1>
     <button class="btn btn-primary mb-3" onclick="window.location.href='./create';">Générer UUID</button>
     <form action="#" th:action="@{/join}" method="post" th:object="${form}">

@@ -58,6 +58,14 @@
     </style>
 </head>
 <body>
+<div sec:authorize="isAuthenticated() == false">
+    <meta http-equiv="refresh" content="0; url=/login"/>
+    <style>
+        body {
+            display: none;
+        }
+    </style>
+</div>
 <h1>Gagnant du jeu Uno</h1>
 <div class="winner">
     <h2 id="winnerName" th:text="${player}">Le gagnant est : [Nom du gagnant]</h2>

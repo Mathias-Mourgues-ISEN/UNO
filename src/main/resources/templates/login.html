@@ -5,7 +5,9 @@
 </head>
 <body>
 <div th:fragment="content">
-    <meta sec:authorize="isAuthenticated() == true" http-equiv="refresh" content="0; url=/lobby" />
+    <div sec:authorize="isAuthenticated() == true">
+        <meta http-equiv="refresh" content="0; url=/lobby"/>
+    </div>
     <form name="f" th:action="@{/login}" method="post">
         <fieldset>
             <legend>Authentification</legend>
@@ -21,7 +23,7 @@
             <label for="password">Mot de passe</label>
             <input type="password" id="password" name="password" autocomplete="off" value="admin"/>
             <div class="form-actions">
-                <button type="submit"  class="btn btn-primary">Connexion</button>
+                <button type="submit" class="btn btn-primary">Connexion</button>
             </div>
         </fieldset>
     </form>

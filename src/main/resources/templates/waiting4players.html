@@ -6,11 +6,16 @@
 </head>
 <body>
 <div th:fragment="content">
+    <div sec:authorize="isAuthenticated() == false">
+        <meta http-equiv="refresh" content="0; url=/login"/>
+        <style>
+            body {
+                display: none;
+            }
+        </style>
+    </div>
     <meta http-equiv="refresh" content="2">
-    <meta sec:authorize="isAuthenticated() == false" http-equiv="refresh" content="0; url=/login"/>
     <h1>En attente de joueurs...</h1>
-    <!--    <h2>Partagez le lien suivant avec vos amis</h2>-->
-    <!--    <h4>Cliquez dessus pour le copier - A FAIRE EN JS</h4>-->
     <label for="copyTarget"></label><input
         type="text"
         id="copyTarget"

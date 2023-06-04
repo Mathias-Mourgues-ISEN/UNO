@@ -47,19 +47,6 @@ public class GameController {
         this.currentGames = new HashMap<>();
     }
 
-    @PostMapping("/game")
-    public String gameAction(Model model) {
-
-        return "redirect:/lobby";
-//        if (currentGame == null) {
-//            currentGame = gameService.initializeGame();
-//        }
-//        model.addAttribute("game", currentGame);
-//
-//        return "game";
-    }
-
-
     @GetMapping("/game/{gameId}")
     public String game(@PathVariable String gameId, Model model) {
         Game currentGame;
