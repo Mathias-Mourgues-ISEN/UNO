@@ -92,6 +92,7 @@ public class GameController {
         model.addAttribute("playerLeft", nextPlayerNumber);
         model.addAttribute("playerTop", nextToNextPlayerNumber);
         model.addAttribute("playerRight", nextToNextToNextPlayerNumber);
+        model.addAttribute("currentPlayer", currentPlayerNumber);
 
 
         return "game";

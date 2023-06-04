@@ -85,6 +85,7 @@
 </div>
 
 <div class="container my-4">
+    <h2 th:text="${game.players.get(currentPlayer).getName()}" class="text-center"></h2>
     <h2 class="text-center">Mon jeu</h2>
     <div class="d-flex justify-content-center align-items-end">
         <div class="card-grid" th:each="card: ${playerHand}">
